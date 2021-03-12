@@ -2,6 +2,13 @@
   Introduction to Database Systems COMP9311 21T1 学习资料/课堂讲解
   后续课堂内容将会更新在此.
   
+## W4
+ - [Quiz3 Note](https://github.com/lrlrlrlr/COMP3311_21T1/tree/main/w4/Quiz3)
+ - [Assignment1_q1~q7](https://github.com/lrlrlrlr/COMP3311_21T1/tree/main/w4/Assignment1)
+ 
+## W3 
+ - [Quiz2_Note](https://github.com/lrlrlrlr/COMP3311_21T1/blob/main/quiz2.pdf)
+
 ## W2
  - [Week2周课ppt](https://github.com/lrlrlrlr/COMP3311_21T1/blob/main/%E5%91%A8%E8%AF%BE_W2.pdf)
  - [Quiz1_Note](https://github.com/lrlrlrlr/COMP3311_21T1/blob/main/quiz1.pdf)
