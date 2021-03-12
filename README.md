@@ -5,9 +5,11 @@
 ## W4
  - [Quiz3 Note](https://github.com/lrlrlrlr/COMP3311_21T1/tree/main/w4/Quiz3)
  - [Assignment1_q1~q7](https://github.com/lrlrlrlr/COMP3311_21T1/tree/main/w4/Assignment1)
+ - week4录屏 （2021年3月11日 20:00~22:00) - 请找客服领取
  
 ## W3 
  - [Quiz2_Note](https://github.com/lrlrlrlr/COMP3311_21T1/blob/main/quiz2.pdf)
+ - week3录屏 (2021年3月4日 20:00~21:00) - 请找客服领取
 
 ## W2
  - [Week2周课ppt](https://github.com/lrlrlrlr/COMP3311_21T1/blob/main/%E5%91%A8%E8%AF%BE_W2.pdf)
