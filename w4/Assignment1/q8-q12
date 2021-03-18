@@ -1,0 +1,213 @@
+
+
+
+-- Q8
+-- List the staff members (their firstname, a space and then the lastname as one column called name) who have successfully sold policies (i.e., enforced policies)
+-- that only cover one brand of vehicle. Order the result by pid in ascending order.
+select concat(firstname, ' ', lastname) as name
+from person; -- concat name
+
+
+select *
+from policy
+where status = 'E'; -- enforced policy
+select brand
+from insured_item;
+
+-- which policy with each item?
+select p.pno, brand
+from insured_item
+         join policy p on insured_item.id = p.id;
+
+-- which seller with the policy?
+select pno, firstname, lastname
+from policy
+         join staff s on policy.sid = s.sid
+         join person p on s.pid = p.pid;
+
+-- combine:
+select pno, s.sid, firstname, lastname, brand
+from policy
+         join staff s on policy.sid = s.sid
+         join person p on s.pid = p.pid
+         join insured_item ii on policy.id = ii.id;
+
+-- find how many for each seller
+select s.sid, count(pno) as policy_number, count(distinct brand) as brand_number
+from policy
+         join staff s on policy.sid = s.sid
+         join person p on s.pid = p.pid
+         join insured_item ii on policy.id = ii.id
+where status = 'E'
+group by s.sid;
+-- answer is sid=0,5
+
+
+-- Q9
+
+-- List clients (their firstname, a space and then the lastname as one column called name) who hold policies that cover all brands of vehicles recorded in the database.
+-- Ignore the policy status and include the past and current policies. Order the result by pid in ascending order.
+
+-- who have the polices?
+select *
+from policy;
+select p.pno, concat(firstname, ' ', lastname) as owner, ii.brand
+from insured_by
+         join client c on insured_by.cid = c.cid
+         join policy p on insured_by.pno = p.pno
+         join person p2 on c.pid = p2.pid
+         join insured_item ii on p.id = ii.id;
+
+
+-- who have all the brand? -- who have the brand count = the brand count (3)?
+with temp as (select p.pno, concat(firstname, ' ', lastname) as name, ii.brand
+              from insured_by
+                       join client c on insured_by.cid = c.cid
+                       join policy p on insured_by.pno = p.pno
+                       join person p2 on c.pid = p2.pid
+                       join insured_item ii on p.id = ii.id)
+select distinct name
+from temp
+where name in (select name
+               from temp
+               group by name
+               having count(distinct brand) =
+                      (select count(distinct brand) from insured_item));
+-- count = brands we have
+
+
+-- Q10
+-- 简单函数用法
+
+
+-- returns the total number of (distinct) staff that have worked (i.e., sells, rates, underwrites) on the given policy
+select *
+from policy
+where pno = 1;
+-- sell is in sno, rates is in rated_by, underwrite is in underwites_by
+
+with write_by as (
+    -- underwritten_by
+    select p.pno, firstname, lastname
+    from staff
+             join underwritten_by ub on staff.sid = ub.sid
+             join underwriting_record on ub.urid = underwriting_record.urid
+             join policy p on underwriting_record.pno = p.pno
+             join person p2 on staff.pid = p2.pid
+),
+     rate_by as (
+         -- rate
+         select p.pno, firstname, lastname
+         from staff
+                  join rated_by rb on staff.sid = rb.sid
+                  join rating_record on rb.rid = rating_record.rid
+                  join coverage c on rating_record.coid = c.coid
+                  join policy p on c.pno = p.pno
+                  join person p2 on staff.pid = p2.pid
+     ),
+     sell_by as (
+         -- sells
+         select p.pno, firstname, lastname
+         from staff
+                  join policy p on staff.sid = p.sid
+                  join person p2 on staff.pid = p2.pid)
+
+
+select *
+from rate_by
+where pno = 5
+union
+
+select *
+from write_by
+where pno = 5
+
+union
+
+select *
+from sell_by
+where pno = 5;
+
+
+
+-- 怎么用函数???
+create or replace function staffcount(pnumber integer) returns integer
+as
+$$
+select sid
+from policy
+where policy.pno = pnumber;
+$$ language sql;
+-- 怎么删除
+drop function staffcount(pno integer);
+-- 怎么调用
+select *
+from staffcount(1);
+
+
+
+-- Q11
+-- procedure怎么用
+
+
+-- 思路
+-- 1. 输入pno,如果pno存在,并且当前vehicle没有同类保险:
+-- 2.1 如果当前effective, 创建一条新的记录, status=D, effectivedate=今天, expirydate=today+(old expirydate-old effectivedate), update the old expirydate to today's date (to end the old policy).
+--      update coverage
+-- 2.2 如果当前不effective, 创建一条新纪录(如上) , 但是expirydate不用管.
+--       update coverage
+
+-- drop procedure change_date(pnumber integer); -- 如何删除procedure
+
+CREATE OR REPLACE PROCEDURE change_date(pnumber integer)
+    LANGUAGE plpgsql
+AS
+$$
+DECLARE
+BEGIN
+
+    if pnumber = 0 then
+        raise exception 'gege';
+    end if;
+
+    update policy
+    set effectivedate='2021-03-12'
+    where pno = pnumber;
+    COMMIT;
+END
+$$;
+
+CALL change_date(0);
+
+
+
+-- Q12 Triggers怎么用
+-- https://www.postgresql.org/docs/9.2/plpgsql-trigger.html
+-- trigger 怎么删除?
+drop trigger newpolicy on policy;
+
+-- 怎么创建?
+create trigger newpolicy
+    before insert or update
+    on policy
+    for each row
+execute procedure checkpolicy();
+
+create or replace function checkpolicy() returns trigger as
+$$
+begin
+    if (NEW.agreedvalue < 1000) then
+        raise exception 'small buisness, we dont care';
+    end if;
+    return new;
+end ;
+
+$$ language plpgsql;
+
+
+-- 怎么触发?
+insert into policy
+VALUES (8, 'G', 'E', '2020-12-16', '2022-12-20', 50000, 'HEHEHE', 5, 7);
+
+select *
+from policy;
