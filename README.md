@@ -1,7 +1,13 @@
 # COMP3311_21T1
   Introduction to Database Systems COMP9311 21T1 学习资料/课堂讲解
   后续课堂内容将会更新在此.
-  
+ 
+## W5
+ -[Assignment1 q8~12]()
+ -[Quiz4]()
+ - ass1-2 （2021年3月16日 20:45~23:00) - 请找客服领取
+ - week5录屏 （2021年3月18日 20:00~21:10) - 请找客服领取
+
 ## W4
  - [Quiz3 Note](https://github.com/lrlrlrlr/COMP3311_21T1/tree/main/w4/Quiz3)
  - [Assignment1_q1~q7](https://github.com/lrlrlrlr/COMP3311_21T1/tree/main/w4/Assignment1)
