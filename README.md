@@ -2,6 +2,10 @@
   Introduction to Database Systems COMP9311 21T1 学习资料/课堂讲解
   后续课堂内容将会更新在此.
  
+ ## W6
+
+ - week6录屏 （2021年3月25日 21:00~22:00) - 请找客服领取
+ 
 ## W5
  -[Assignment1 q8~12]()
  -[Quiz4]()
